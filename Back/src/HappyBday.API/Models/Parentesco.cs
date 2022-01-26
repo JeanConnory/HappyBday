@@ -2,7 +2,7 @@ using System;
 
 namespace HappyBday.API.Models
 {
-    public class Proximidade
+    public class Parentesco
     {
         public int Id { get; set; }
 
