@@ -9,11 +9,11 @@ namespace HappyBday.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ParentescoController : ControllerBase
+    public class ParentescosController : ControllerBase
     {
         private readonly DataContext _context;
 
-        public ParentescoController(DataContext context)
+        public ParentescosController(DataContext context)
         {
             _context = context;
         }
