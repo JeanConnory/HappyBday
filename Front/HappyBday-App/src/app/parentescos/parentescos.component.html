@@ -1,7 +1,38 @@
-<h1>Parentescos do components</h1>
+<h2>Parentescos</h2>
+<hr>
 
-<div *ngFor="let parentesco of parentescos">
-  <p><b>Id:</b> {{parentesco.id}}</p>
-  <p><b>Descrição:</b> {{parentesco.descricao}}</p>
-  <hr>
+<div class="form-inline">
+  <div class="form-group mb-2">
+    <label class="mr-2">Filtro:</label>
+    <input type="text" class="form-control mr-2" placeholder="buscar" [(ngModel)]="filtroLista">
+  </div>
 </div>
+<table class="table table-striped">
+  <thead class="thead-dark">
+    <tr>
+      <th>Id</th>
+      <th>Descrição</th>
+      <th>Data Criado</th>
+      <th style="text-align: center;">Ações</th>
+    </tr>
+  </thead>
+  <tbody *ngIf="parentescos && parentescos.length">
+    <tr *ngFor="let parentesco of parentescosFiltrados">
+      <td>{{parentesco.id}}</td>
+      <td>{{parentesco.descricao}}</td>
+      <td>{{parentesco.dataCriado}}</td>
+      <td style="text-align: center;">
+        <button type="button" class="btn btn-primary btn-sm mr-2">Editar</button>
+        <button type="button" class="btn btn-danger btn-sm">Excluir</button>
+      </td>
+    </tr>
+  </tbody>
+  <tfoot *ngIf="!parentescos.length">
+    <tr>
+      <td colspan="4" class="text-center">
+        <h4>Nenhum parentesco encontrado</h4>
+      </td>
+    </tr>
+  </tfoot>
+</table>
+
