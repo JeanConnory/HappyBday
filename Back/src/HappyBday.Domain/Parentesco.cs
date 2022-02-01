@@ -1,6 +1,6 @@
 using System;
 
-namespace HappyBday.API.Models
+namespace HappyBday.Domain
 {
     public class Parentesco
     {

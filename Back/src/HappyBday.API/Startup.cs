@@ -1,17 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using HappyBday.API.Data;
+using HappyBday.Application;
+using HappyBday.Application.Contratos;
+using HappyBday.Persistence;
+using HappyBday.Persistence.Contexto;
+using HappyBday.Persistence.Contratos;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
 namespace HappyBday.API
@@ -28,11 +25,19 @@ namespace HappyBday.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DataContext>(
+            services.AddDbContext<HappyBdayContext>(
                 context => context.UseSqlite(Configuration.GetConnectionString("Default"))
             );
 
-            services.AddControllers();
+            services.AddControllers()
+                .AddNewtonsoftJson(x =>
+                    x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                );
+                    
+
+            services.AddScoped<IAniversarioService, AniversarioService>();
+            services.AddScoped<IGeralPersistence, GeralPersistence>();
+            services.AddScoped<IAniversarioPersistence, AniversarioPersistence>();
 
             services.AddCors();
 

@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using HappyBday.API.Data;
-using HappyBday.API.Models;
+using HappyBday.Persistence.Contexto;
+using HappyBday.Domain;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HappyBday.API.Controllers
@@ -11,9 +10,9 @@ namespace HappyBday.API.Controllers
     [Route("api/[controller]")]
     public class ParentescosController : ControllerBase
     {
-        private readonly DataContext _context;
+        private readonly HappyBdayContext _context;
 
-        public ParentescosController(DataContext context)
+        public ParentescosController(HappyBdayContext context)
         {
             _context = context;
         }
