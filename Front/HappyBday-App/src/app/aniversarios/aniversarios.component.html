@@ -4,16 +4,16 @@
 <div class="form-inline">
   <div class="form-group mb-2">
     <label class="mr-2">Filtro:</label>
-    <input type="text" class="form-control mr-2" placeholder="buscar"
-    [(ngModel)]="filtroLista">
+    <input type="text" class="form-control mr-2" placeholder="buscar" [(ngModel)]="filtroLista">
   </div>
 </div>
 <table class="table table-stripped">
   <thead class="thead-dark">
     <tr>
       <th>
-        <button type="button" class="btn btn-outline-light btn sm"
-        (click)="alterarImagem()">{{!exibirImg ? "exibir" : "ocultar"}}</button>
+        <button type="button" class="btn btn-outline-light btn sm" (click)="alterarImagem()">
+          <i class="{{!exibirImg ? 'fa fa-eye' : 'fa fa-eye-slash'}}"></i>
+          {{!exibirImg ? "exibir" : "ocultar"}}</button>
       </th>
       <th>#</th>
       <th>Nome</th>
@@ -27,18 +27,18 @@
   <tbody *ngIf="aniversarios && aniversarios.length">
     <tr *ngFor="let niver of aniversariosFiltrados">
       <td>
-        <img [collapse]="!exibirImg" [isAnimated]="true"
-        src="/assets/{{niver.imagemUrl}}" [style.width.px]="larguraImg" [style.margin.px]="margemImg">
+        <img [collapse]="!exibirImg" [isAnimated]="true" src="/assets/{{niver.imagemUrl}}" [style.width.px]="larguraImg"
+          [style.margin.px]="margemImg">
       </td>
       <td>{{niver.id}}</td>
       <td>{{niver.nome}}</td>
-      <td>{{niver.dataAniversario}}</td>
+      <td>{{niver.dataAniversario | DateFormatPipe}}</td>
       <td>{{niver.email}}</td>
       <td>{{niver.telefone}}</td>
-      <td></td>
+      <td>{{niver.parentesco.descricao}}</td>
       <td style="text-align: center;">
-        <button type="button" class="btn btn-primary btn-sm mr-2">Editar</button>
-        <button type="button" class="btn btn-danger btn-sm">Excluir</button>
+        <button type="button" class="btn btn-primary btn-sm mr-2" tooltip="Editar"><i class="fa fa-edit"></i></button>
+        <button type="button" class="btn btn-danger btn-sm" tooltip="Excluir"><i class="fa fa-trash"></i></button>
       </td>
     </tr>
   </tbody>

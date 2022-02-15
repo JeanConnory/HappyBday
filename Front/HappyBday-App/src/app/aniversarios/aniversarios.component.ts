@@ -1,54 +1,56 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { Aniversario } from '../models/Aniversario';
+import { AniversarioService } from '../services/aniversario.service';
 
 @Component({
   selector: 'app-aniversarios',
   templateUrl: './aniversarios.component.html',
   styleUrls: ['./aniversarios.component.scss']
+  //providers: [AniversarioService]
 })
 export class AniversariosComponent implements OnInit {
 
-  public aniversarios: any = [];
-  public aniversariosFiltrados: any = [];
-  larguraImg: number = 75;
-  margemImg: number = 2;
-  exibirImg: boolean = true;
-  private _filtroLista: string = '';
+  public aniversarios: Aniversario[] = [];
+  public aniversariosFiltrados: Aniversario[] = [];
+  public larguraImg: number = 75;
+  public margemImg: number = 2;
+  public exibirImg: boolean = true;
+  private filtroListado: string = '';
 
   public get filtroLista(): string {
-    return this._filtroLista;
+    return this.filtroListado;
   }
 
   public set filtroLista(value: string) {
-    this._filtroLista = value;
+    this.filtroListado = value;
     this.aniversariosFiltrados = this.filtroLista ? this.filtrarAniversarios(this.filtroLista) : this.aniversarios;
   }
 
-  filtrarAniversarios(filtrarPor: string): any {
+  public filtrarAniversarios(filtrarPor: string): Aniversario[] {
     filtrarPor = filtrarPor.toLocaleLowerCase();
     return this.aniversarios.filter(
       (niver: any) => niver.nome.toLocaleLowerCase().indexOf(filtrarPor) !== -1 ||
        niver.email.toLocaleLowerCase().indexOf(filtrarPor) !== -1
-    )
+    );
   }
 
-  constructor(private http: HttpClient) { }
+  constructor(private aniversarioService: AniversarioService) { }
 
   ngOnInit() {
     this.getAniversarios();
   }
 
-  alterarImagem() {
+  public alterarImagem(): void {
     this.exibirImg = !this.exibirImg;
   }
 
   public getAniversarios():void {
-    this.http.get('https://localhost:5001/api/aniversarios').subscribe(
-      response => {
-        this.aniversarios = response,
+    this.aniversarioService.getAniversarios().subscribe({
+      next: (eventos: Aniversario[]) => {
+        this.aniversarios = eventos,
         this.aniversariosFiltrados = this.aniversarios
       },
-      error => console.log(error)
-    );
+      error: (error: any) => console.log(error)
+    });
   }
 }
