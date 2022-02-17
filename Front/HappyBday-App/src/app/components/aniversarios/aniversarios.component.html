@@ -1,5 +1,4 @@
-<h2>Aniversários</h2>
-<hr>
+<app-titulo [titulo]="'Aniversários'"></app-titulo>
 
 <div class="form-inline">
   <div class="form-group mb-2">
@@ -38,7 +37,7 @@
       <td>{{niver.parentesco.descricao}}</td>
       <td style="text-align: center;">
         <button type="button" class="btn btn-primary btn-sm mr-2" tooltip="Editar"><i class="fa fa-edit"></i></button>
-        <button type="button" class="btn btn-danger btn-sm" tooltip="Excluir"><i class="fa fa-trash"></i></button>
+        <button type="button" class="btn btn-danger btn-sm" tooltip="Excluir" (click)="openModal(template)"><i class="fa fa-trash"></i></button>
       </td>
     </tr>
   </tbody>
@@ -50,3 +49,11 @@
     </tr>
   </tfoot>
 </table>
+
+<ng-template #template>
+  <div class="modal-body text-center">
+    <p>Tem certeza que quer deletar esse aniversário?</p>
+    <button type="button" class="btn btn-default" (click)="confirm()" >Sim</button>
+    <button type="button" class="btn btn-primary" (click)="decline()" >Não</button>
+  </div>
+</ng-template>
