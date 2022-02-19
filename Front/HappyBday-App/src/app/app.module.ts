@@ -25,6 +25,8 @@ import { AniversarioService } from './services/aniversario.service';
 
 import { DateTimeFormatPipe } from './helpers/DateTimeFormat.pipe';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { AniversarioDetalheComponent } from './components/aniversarios/aniversario-detalhe/aniversario-detalhe.component';
+import { AniversarioListaComponent } from './components/aniversarios/aniversario-lista/aniversario-lista.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +38,9 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
     PerfilComponent,
     DashboardComponent,
     TituloComponent,
-    DateTimeFormatPipe
+    DateTimeFormatPipe,
+    AniversarioDetalheComponent,
+    AniversarioListaComponent
   ],
   imports: [
     BrowserModule,
