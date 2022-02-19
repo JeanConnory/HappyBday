@@ -19,7 +19,12 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    // deixar as referencias mais elegantes sem os ../ ou src/ ...
+    "paths": {
+      "@app/*": ["src/app/*"],
+      "@enviroments/*": ["src/enviroments/*"]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

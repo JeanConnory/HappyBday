@@ -1,14 +1,29 @@
-import { Component, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+
 import { AdminComponent } from './components/admin/admin.component';
-import { AniversarioDetalheComponent } from './components/aniversarios/aniversario-detalhe/aniversario-detalhe.component';
-import { AniversarioListaComponent } from './components/aniversarios/aniversario-lista/aniversario-lista.component';
-import { AniversariosComponent } from './components/aniversarios/aniversarios.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+
+import { AniversariosComponent } from './components/aniversarios/aniversarios.component';
+import { AniversarioListaComponent } from './components/aniversarios/aniversario-lista/aniversario-lista.component';
+import { AniversarioDetalheComponent } from './components/aniversarios/aniversario-detalhe/aniversario-detalhe.component';
+
+import { UserComponent } from './components/user/user.component';
+import { LoginComponent } from './components/user/login/login.component';
+import { RegistrationComponent } from './components/user/registration/registration.component';
+import { PerfilComponent } from './components/user/perfil/perfil.component';
+
 import { ParentescosComponent } from './components/parentescos/parentescos.component';
-import { PerfilComponent } from './components/perfil/perfil.component';
 
 const routes: Routes = [
+  {
+    path: 'user', component: UserComponent,
+    children: [
+      { path: 'login', component: LoginComponent },
+      {path: 'registration', component: RegistrationComponent }
+    ]
+  },
+  { path: 'user/perfil', component: PerfilComponent },
   { path: 'aniversarios', redirectTo: 'aniversarios/lista'},
   {
     path: 'aniversarios', component: AniversariosComponent,
@@ -21,7 +36,6 @@ const routes: Routes = [
   { path: 'parentescos', component: ParentescosComponent },
   { path: 'admin', component: AdminComponent },
   { path: 'dashboard', component: DashboardComponent },
-  { path: 'perfil', component: PerfilComponent },
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   { path: '**', redirectTo: 'dashboard', pathMatch: 'full' }
 ];

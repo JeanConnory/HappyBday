@@ -18,15 +18,18 @@ import { NavComponent } from './shared/nav/nav.component';
 import { AdminComponent } from './components/admin/admin.component';
 import { AniversariosComponent } from './components/aniversarios/aniversarios.component';
 import { ParentescosComponent } from './components/parentescos/parentescos.component';
-import { PerfilComponent } from './components/perfil/perfil.component';
+import { PerfilComponent } from './components/user/perfil/perfil.component';
 import { TituloComponent } from './shared/titulo/titulo.component';
+import { AniversarioDetalheComponent } from './components/aniversarios/aniversario-detalhe/aniversario-detalhe.component';
+import { AniversarioListaComponent } from './components/aniversarios/aniversario-lista/aniversario-lista.component';
+import { UserComponent } from './components/user/user.component';
+import { LoginComponent } from './components/user/login/login.component';
+import { RegistrationComponent } from './components/user/registration/registration.component';
 
 import { AniversarioService } from './services/aniversario.service';
 
 import { DateTimeFormatPipe } from './helpers/DateTimeFormat.pipe';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { AniversarioDetalheComponent } from './components/aniversarios/aniversario-detalhe/aniversario-detalhe.component';
-import { AniversarioListaComponent } from './components/aniversarios/aniversario-lista/aniversario-lista.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +43,10 @@ import { AniversarioListaComponent } from './components/aniversarios/aniversario
     TituloComponent,
     DateTimeFormatPipe,
     AniversarioDetalheComponent,
-    AniversarioListaComponent
+    AniversarioListaComponent,
+    UserComponent,
+    LoginComponent,
+    RegistrationComponent
   ],
   imports: [
     BrowserModule,
