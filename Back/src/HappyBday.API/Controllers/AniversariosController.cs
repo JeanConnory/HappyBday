@@ -3,7 +3,7 @@ using HappyBday.Application.Contratos;
 using System.Threading.Tasks;
 using System;
 using Microsoft.AspNetCore.Http;
-using HappyBday.Domain;
+using HappyBday.Application.Dtos;
 
 namespace HappyBday.API.Controllers
 {
@@ -24,7 +24,7 @@ namespace HappyBday.API.Controllers
             try
             {
                 var aniversarios = await _aniversarioService.GetAllAniversariosAsync(true);
-                if(aniversarios == null) return NotFound("Nenhum Aniversário encontrado!");
+                if(aniversarios == null) return NoContent();
 
                 return Ok(aniversarios);
             }
@@ -40,7 +40,7 @@ namespace HappyBday.API.Controllers
             try
             {
                 var aniversario = await _aniversarioService.GetAniversarioByIdAsync(id, true);
-                if(aniversario == null) return NotFound("Aniversário pelo id não encontrado!");
+                if(aniversario == null) return NoContent();
 
                 return Ok(aniversario);
             }
@@ -56,7 +56,7 @@ namespace HappyBday.API.Controllers
             try
             {
                 var aniversario = await _aniversarioService.GetAllAniversariosByNomeAsync(nome, true);
-                if(aniversario == null) return NotFound("Aniversários pelo nome não encontrados!");
+                if(aniversario == null) return NoContent();
 
                 return Ok(aniversario);
             }
@@ -67,12 +67,12 @@ namespace HappyBday.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(Aniversario model)
+        public async Task<IActionResult> Post(AniversarioDto model)
         {
             try
             {
                 var aniversario = await _aniversarioService.AddAniversario(model);
-                if(aniversario == null) return BadRequest("Erro ao tentar adicionar aniversário");
+                if(aniversario == null) return NoContent();
 
                 return Ok(aniversario);
             }
@@ -83,12 +83,12 @@ namespace HappyBday.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, Aniversario model)
+        public async Task<IActionResult> Put(int id, AniversarioDto model)
         {
             try
             {
                 var aniversario = await _aniversarioService.UpdateAniversario(id, model);
-                if(aniversario == null) return BadRequest("Erro ao tentar atualizar aniversário");
+                if(aniversario == null) return NoContent();
 
                 return Ok(aniversario);
             }
@@ -103,9 +103,12 @@ namespace HappyBday.API.Controllers
         {
             try
             {
+                var aniversario = await _aniversarioService.GetAniversarioByIdAsync(id, true);
+                if(aniversario == null) return NoContent();
+
                 return await _aniversarioService.DeleteAniversario(id) ? 
                             Ok("Deletado") : 
-                            BadRequest("Aniversário não deletado");
+                            throw new Exception("Ocorreu um problema não específico ao tentar deletar o aniversário");
             }
             catch (Exception ex)
             {                

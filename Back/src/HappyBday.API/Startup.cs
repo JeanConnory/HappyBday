@@ -10,6 +10,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using AutoMapper;
+using System;
 
 namespace HappyBday.API
 {
@@ -34,7 +36,7 @@ namespace HappyBday.API
                     x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
                 );
                     
-
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<IAniversarioService, AniversarioService>();
             services.AddScoped<IGeralPersistence, GeralPersistence>();
             services.AddScoped<IAniversarioPersistence, AniversarioPersistence>();

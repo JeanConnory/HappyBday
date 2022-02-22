@@ -1,15 +1,15 @@
 using System.Threading.Tasks;
-using HappyBday.Domain;
+using HappyBday.Application.Dtos;
 
 namespace HappyBday.Application.Contratos
 {
     public interface IAniversarioService
     {
-        Task<Aniversario> AddAniversario(Aniversario model);
-        Task<Aniversario> UpdateAniversario(int aniversarioId, Aniversario model);
+        Task<AniversarioDto> AddAniversario(AniversarioDto model);
+        Task<AniversarioDto> UpdateAniversario(int aniversarioId, AniversarioDto model);
         Task<bool> DeleteAniversario(int aniversarioId);
-        Task<Aniversario[]> GetAllAniversariosAsync(bool includeParentesco = false);
-        Task<Aniversario[]> GetAllAniversariosByNomeAsync(string nome, bool includeParentesco = false);
-        Task<Aniversario> GetAniversarioByIdAsync(int aniversarioId, bool includeParentesco = false);
+        Task<AniversarioDto[]> GetAllAniversariosAsync(bool includeParentesco = false);
+        Task<AniversarioDto[]> GetAllAniversariosByNomeAsync(string nome, bool includeParentesco = false);
+        Task<AniversarioDto> GetAniversarioByIdAsync(int aniversarioId, bool includeParentesco = false);
     }
 }
