@@ -19,6 +19,7 @@ export class AniversarioListaComponent implements OnInit {
   public margemImg: number = 2;
   public exibirImg: boolean = true;
   private filtroListado: string = '';
+  public aniversarioId = 0;
 
   modalRef?: BsModalRef;
 
@@ -35,30 +36,30 @@ export class AniversarioListaComponent implements OnInit {
     filtrarPor = filtrarPor.toLocaleLowerCase();
     return this.aniversarios.filter(
       (niver: any) => niver.nome.toLocaleLowerCase().indexOf(filtrarPor) !== -1 ||
-       niver.email.toLocaleLowerCase().indexOf(filtrarPor) !== -1
+        niver.email.toLocaleLowerCase().indexOf(filtrarPor) !== -1
     );
   }
 
   constructor(private aniversarioService: AniversarioService,
-              private modalService: BsModalService,
-              private toastr: ToastrService,
-              private spinner: NgxSpinnerService,
-              private router: Router) { }
+    private modalService: BsModalService,
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService,
+    private router: Router) { }
 
   ngOnInit() {
     this.spinner.show();
-    this.getAniversarios();
+    this.carregarAniversarios();
   }
 
   public alterarImagem(): void {
     this.exibirImg = !this.exibirImg;
   }
 
-  public getAniversarios():void {
+  public carregarAniversarios(): void {
     this.aniversarioService.getAniversarios().subscribe({
       next: (eventos: Aniversario[]) => {
         this.aniversarios = eventos,
-        this.aniversariosFiltrados = this.aniversarios
+          this.aniversariosFiltrados = this.aniversarios
       },
       error: (error: any) => {
         this.spinner.hide();
@@ -68,13 +69,24 @@ export class AniversarioListaComponent implements OnInit {
     });
   }
 
-  openModal(template: TemplateRef<any>): void {
-    this.modalRef = this.modalService.show(template, {class: 'modal-sm'});
+  openModal(event: any, template: TemplateRef<any>, aniversarioId: number): void {
+    event.stopPropagation();
+    this.aniversarioId = aniversarioId;
+    this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
   }
 
   confirm(): void {
     this.modalRef?.hide();
-    this.toastr.success('O Aniversário foi deletado com sucesso!', 'Deletado');
+    this.spinner.show();
+    this.aniversarioService.deleteAniversario(this.aniversarioId).subscribe(
+      (result: any) => {
+        this.toastr.success('O Aniversário foi deletado com sucesso!', 'Deletado');
+        this.carregarAniversarios();
+      },
+      (error: any) => {
+        console.error(error);
+        this.toastr.error(`Erro ao tentar deletar o aniversário ${this.aniversarioId}`);
+      }).add(() => this.spinner.hide());
   }
 
   decline(): void {

@@ -39,12 +39,12 @@
         </td>
         <td>{{niver.id}}</td>
         <td>{{niver.nome}}</td>
-        <td>{{niver.dataAniversario | DateFormatPipe}}</td>
+        <td>{{niver.dataAniversario}}</td>
         <td class="d-none d-md-table-cell">{{niver.email}}</td>
         <td class="d-none d-md-table-cell">{{niver.telefone}}</td>
-        <td class="d-none d-md-table-cell">{{niver.parentesco.descricao}}</td>
+        <td class="d-none d-md-table-cell">{{niver.parentesco?.descricao}}</td>
         <td style="text-align: center;">
-          <button type="button" class="btn btn-danger btn-lg" tooltip="Excluir" (click)="openModal(template)"><i
+          <button type="button" class="btn btn-danger btn-lg" tooltip="Excluir" (click)="openModal($event, template, niver.id)"><i
               class="fa fa-trash"></i></button>
         </td>
       </tr>
@@ -61,7 +61,7 @@
 
 <ng-template #template>
   <div class="modal-body text-center">
-    <p>Tem certeza que quer deletar esse aniversário?</p>
+    <p>Tem certeza que quer deletar esse aniversário de código {{this.aniversarioId}}?</p>
     <button type="button" class="btn btn-default" (click)="confirm()">Sim</button>
     <button type="button" class="btn btn-primary" (click)="decline()">Não</button>
   </div>

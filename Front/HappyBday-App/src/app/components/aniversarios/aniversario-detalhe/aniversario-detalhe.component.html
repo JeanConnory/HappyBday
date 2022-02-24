@@ -7,7 +7,7 @@
         <div class="form-group col-md-12">
           <label>Nome</label>
           <input type="text" class="form-control" formControlName="nome" placeholder="Insira o Nome"
-            [ngClass]="{'is-invalid': f.nome.errors && f.nome.touched }">
+            [ngClass]="cssValidator(f.nome)">
           <div *ngIf="f.nome.errors?.required" class="invalid-feedback">Nome é obrigatório</div>
           <div *ngIf="f.nome.errors?.minlength" class="invalid-feedback">Nome deve ter no mínimo 4 caracteres</div>
           <div *ngIf="f.nome.errors?.maxlength" class="invalid-feedback">Nome deve ter no máximo 150 caracteres</div>
@@ -17,20 +17,22 @@
         <div class="form-group col-md-4">
           <label>Data de Aniversário</label>
           <input type="datetime" class="form-control" formControlName="dataAniversario" placeholder="Insira a Data de Aniversário"
-          [ngClass]="{'is-invalid': f.dataAniversario.errors && f.dataAniversario.touched }">
+          value="{{aniversario.dataAniversario}}"
+          bsDatepicker [bsConfig]="bsConfig"
+          [ngClass]="cssValidator(f.dataAniversario)">
           <div *ngIf="f.dataAniversario.errors?.required" class="invalid-feedback">Data de Aniversário é obrigatório</div>
         </div>
         <div class="form-group col">
           <label>Parentesco</label>
           <select class="form-control">
             <option value=""></option>
-            <option value="0">Pai</option>
-            <option value="Senhorita">Mãe</option>
-            <option value="Senhorita">Namorado(a)/Conjuge</option>
-            <option value="Senhorita">Irmão/Irmã</option>
-            <option value="Senhorita">Primo(a)</option>
-            <option value="Senhorita">Tio(a)</option>
-            <option value="Senhorita">Amigo(a)</option>
+            <option value="1">Pai</option>
+            <option value="2">Mãe</option>
+            <option value="3">Namorado(a)/Conjuge</option>
+            <option value="4">Irmão/Irmã</option>
+            <option value="5">Primo(a)</option>
+            <option value="6">Tio(a)</option>
+            <option value="7">Amigo(a)</option>
           </select>
         </div>
       </div>
@@ -38,20 +40,20 @@
         <div class="form-group col-md-2">
           <label>Telefone</label>
           <input type="text" class="form-control" formControlName="telefone" placeholder="(000) 90000-0000"
-          [ngClass]="{'is-invalid': f.telefone.errors && f.telefone.touched }">
+          [ngClass]="cssValidator(f.telefone)">
           <div *ngIf="f.telefone.errors?.required" class="invalid-feedback">Telefone é obrigatório</div>
         </div>
         <div class="form-group col-md-4">
           <label>E-mail</label>
           <input type="email" class="form-control" formControlName="email" placeholder="e-mail"
-          [ngClass]="{'is-invalid': f.email.errors && f.email.touched }">
+          [ngClass]="cssValidator(f.email)">
           <div *ngIf="f.email.errors?.required" class="invalid-feedback">E-mail é obrigatório</div>
           <div *ngIf="f.email.errors?.email" class="invalid-feedback">E-mail é inválido</div>
         </div>
         <div class="form-group col-md-4">
           <label>Imagem</label>
           <input type="text" class="form-control" formControlName="imagemUrl" placeholder="imagem"
-          [ngClass]="{'is-invalid': f.imagemUrl.errors && f.imagemUrl.touched }">
+          [ngClass]="cssValidator(f.imagemUrl)">
           <div *ngIf="f.imagemUrl.errors?.required" class="invalid-feedback">Imagem é obrigatório</div>
         </div>
       </div>
@@ -61,7 +63,7 @@
         <button class="btn btn-outline-secondary mr-auto border" (click)="resetForm()">
           Cancelar Alteração
         </button>
-        <button class="btn btn-success" [disabled]="!form.valid">
+        <button class="btn btn-success" [disabled]="!form.valid" (click)="salvarAlteracao()">
           <!-- <span class="spinner-border spinner-border-sm mr-1"></span> -->
           Salvar Evento
         </button>
@@ -69,4 +71,3 @@
     </div>
   </form>
 </div>
-

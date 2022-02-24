@@ -16,7 +16,7 @@ namespace HappyBday.Domain
 
         public string ImagemUrl { get; set; }
 
-        public int ParentescoId { get; set; }
+        public int? ParentescoId { get; set; }
 
         public Parentesco Parentesco { get; set; }
     }

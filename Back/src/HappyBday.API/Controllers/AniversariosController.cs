@@ -106,9 +106,9 @@ namespace HappyBday.API.Controllers
                 var aniversario = await _aniversarioService.GetAniversarioByIdAsync(id, true);
                 if(aniversario == null) return NoContent();
 
-                return await _aniversarioService.DeleteAniversario(id) ? 
-                            Ok("Deletado") : 
-                            throw new Exception("Ocorreu um problema não específico ao tentar deletar o aniversário");
+                return await _aniversarioService.DeleteAniversario(id) 
+                            ? Ok( new { message = "Deletado" }) 
+                            : throw new Exception("Ocorreu um problema não específico ao tentar deletar o aniversário");
             }
             catch (Exception ex)
             {                
