@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using HappyBday.Persistence.Contexto;
-using HappyBday.Domain;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using System;
+using HappyBday.Application.Dtos;
+using HappyBday.Application.Contratos;
 
 namespace HappyBday.API.Controllers
 {
@@ -10,41 +11,109 @@ namespace HappyBday.API.Controllers
     [Route("api/[controller]")]
     public class ParentescosController : ControllerBase
     {
-        private readonly HappyBdayContext _context;
+        private readonly IParentescoService _parentescoService;
 
-        public ParentescosController(HappyBdayContext context)
+        public ParentescosController(IParentescoService parentescoService)
         {
-            _context = context;
+            _parentescoService = parentescoService;
         }
 
         [HttpGet]
-        public IEnumerable<Parentesco> Get()
+        public async Task<IActionResult> Get()
         {
-            return _context.Parentescos;
+            try
+            {
+                var parentescos = await _parentescoService.GetAllParentescosAsync();
+                if(parentescos == null) return NoContent();
+
+                return Ok(parentescos);
+            }
+            catch (Exception ex)
+            {                
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Erro ao tentar recuperar parentesco. Erro: {ex.Message}");
+            }
         }
 
         [HttpGet("{id}")]
-        public Parentesco GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            return _context.Parentescos.Where(p => p.Id == id).FirstOrDefault();
+            try
+            {
+                var parentesco = await _parentescoService.GetParentescoByIdAsync(id);
+                if(parentesco == null) return NoContent();
+
+                return Ok(parentesco);
+            }
+            catch (Exception ex)
+            {                
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Erro ao tentar recuperar parentesco. Erro: {ex.Message}");
+            }
+        }
+
+        [HttpGet("{descricao}/descricao")]
+        public async Task<IActionResult> GetByNome(string descricao)
+        {
+            try
+            {
+                var parentesco = await _parentescoService.GetAllParentescosByDescricaoAsync(descricao);
+                if(parentesco == null) return NoContent();
+
+                return Ok(parentesco);
+            }
+            catch (Exception ex)
+            {                
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Erro ao tentar recuperar parentesco. Erro: {ex.Message}");
+            }
         }
 
         [HttpPost]
-        public string Post()
+        public async Task<IActionResult> Post(ParentescoDto model)
         {
-            return "Exemplo de Post";
+            try
+            {
+                var parentesco = await _parentescoService.AddParentesco(model);
+                if(parentesco == null) return NoContent();
+
+                return Ok(parentesco);
+            }
+            catch (Exception ex)
+            {                
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Erro ao tentar adicionar parentesco. Erro: {ex.Message}");
+            }
         }
 
         [HttpPut("{id}")]
-        public string Put(int id)
+        public async Task<IActionResult> Put(int id, ParentescoDto model)
         {
-            return $"Exemplo de Put com id = {id}";
+            try
+            {
+                var parentesco = await _parentescoService.UpdateParentesco(id, model);
+                if(parentesco == null) return NoContent();
+
+                return Ok(parentesco);
+            }
+            catch (Exception ex)
+            {                
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Erro ao tentar atualizar parentesco. Erro: {ex.Message}");
+            }
         }
 
         [HttpDelete("{id}")]
-        public string Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            return $"Exemplo de Delete com id = {id}";
+            try
+            {
+                var parentesco = await _parentescoService.GetParentescoByIdAsync(id);
+                if(parentesco == null) return NoContent();
+
+                return await _parentescoService.DeleteParentesco(id) 
+                            ? Ok( new { message = "Deletado" }) 
+                            : throw new Exception("Ocorreu um problema não específico ao tentar deletar o parentesco");
+            }
+            catch (Exception ex)
+            {                
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Erro ao tentar deletar parentesco. Erro: {ex.Message}");
+            }
         }
     }
 }

@@ -30,6 +30,7 @@ import { LoginComponent } from './components/user/login/login.component';
 import { RegistrationComponent } from './components/user/registration/registration.component';
 
 import { AniversarioService } from './services/aniversario.service';
+import { ParentescoService } from './services/parentesco.service';
 
 import { DateTimeFormatPipe } from './helpers/DateTimeFormat.pipe';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
@@ -74,7 +75,8 @@ defineLocale('pt-br', ptBrLocale);
     NgxSpinnerModule
   ],
   providers: [
-    AniversarioService
+    AniversarioService,
+    ParentescoService
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

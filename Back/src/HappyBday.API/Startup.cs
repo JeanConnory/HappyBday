@@ -38,8 +38,10 @@ namespace HappyBday.API
                     
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<IAniversarioService, AniversarioService>();
+            services.AddScoped<IParentescoService, ParentescoService>();
             services.AddScoped<IGeralPersistence, GeralPersistence>();
             services.AddScoped<IAniversarioPersistence, AniversarioPersistence>();
+            services.AddScoped<IParentescoPersistence, ParentescoPersistence>();
 
             services.AddCors();
 
