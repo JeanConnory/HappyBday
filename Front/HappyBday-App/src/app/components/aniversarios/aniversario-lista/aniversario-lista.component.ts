@@ -20,7 +20,6 @@ export class AniversarioListaComponent implements OnInit {
   public exibirImg: boolean = true;
   private filtroListado: string = '';
   public aniversarioId = 0;
-
   modalRef?: BsModalRef;
 
   public get filtroLista(): string {
@@ -30,14 +29,6 @@ export class AniversarioListaComponent implements OnInit {
   public set filtroLista(value: string) {
     this.filtroListado = value;
     this.aniversariosFiltrados = this.filtroLista ? this.filtrarAniversarios(this.filtroLista) : this.aniversarios;
-  }
-
-  public filtrarAniversarios(filtrarPor: string): Aniversario[] {
-    filtrarPor = filtrarPor.toLocaleLowerCase();
-    return this.aniversarios.filter(
-      (niver: any) => niver.nome.toLocaleLowerCase().indexOf(filtrarPor) !== -1 ||
-        niver.email.toLocaleLowerCase().indexOf(filtrarPor) !== -1
-    );
   }
 
   constructor(private aniversarioService: AniversarioService,
@@ -51,14 +42,22 @@ export class AniversarioListaComponent implements OnInit {
     this.carregarAniversarios();
   }
 
+  public filtrarAniversarios(filtrarPor: string): Aniversario[] {
+    filtrarPor = filtrarPor.toLocaleLowerCase();
+    return this.aniversarios.filter(
+      (niver: any) => niver.nome.toLocaleLowerCase().indexOf(filtrarPor) !== -1 ||
+        niver.email.toLocaleLowerCase().indexOf(filtrarPor) !== -1
+    );
+  }
+
   public alterarImagem(): void {
     this.exibirImg = !this.exibirImg;
   }
 
   public carregarAniversarios(): void {
     this.aniversarioService.getAniversarios().subscribe({
-      next: (eventos: Aniversario[]) => {
-        this.aniversarios = eventos,
+      next: (aniversarios: Aniversario[]) => {
+        this.aniversarios = aniversarios,
           this.aniversariosFiltrados = this.aniversarios
       },
       error: (error: any) => {

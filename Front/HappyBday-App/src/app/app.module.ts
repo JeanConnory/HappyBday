@@ -28,6 +28,8 @@ import { AniversarioListaComponent } from './components/aniversarios/aniversario
 import { UserComponent } from './components/user/user.component';
 import { LoginComponent } from './components/user/login/login.component';
 import { RegistrationComponent } from './components/user/registration/registration.component';
+import { ParentescoDetalheComponent } from './components/parentescos/parentesco-detalhe/parentesco-detalhe.component';
+import { ParentescoListaComponent } from './components/parentescos/parentesco-lista/parentesco-lista.component';
 
 import { AniversarioService } from './services/aniversario.service';
 import { ParentescoService } from './services/parentesco.service';
@@ -52,7 +54,9 @@ defineLocale('pt-br', ptBrLocale);
     AniversarioListaComponent,
     UserComponent,
     LoginComponent,
-    RegistrationComponent
+    RegistrationComponent,
+    ParentescoDetalheComponent,
+    ParentescoListaComponent
   ],
   imports: [
     BrowserModule,

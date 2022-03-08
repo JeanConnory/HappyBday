@@ -14,6 +14,8 @@ import { RegistrationComponent } from './components/user/registration/registrati
 import { PerfilComponent } from './components/user/perfil/perfil.component';
 
 import { ParentescosComponent } from './components/parentescos/parentescos.component';
+import { ParentescoDetalheComponent } from './components/parentescos/parentesco-detalhe/parentesco-detalhe.component';
+import { ParentescoListaComponent } from './components/parentescos/parentesco-lista/parentesco-lista.component';
 
 const routes: Routes = [
   {
@@ -27,13 +29,23 @@ const routes: Routes = [
   { path: 'aniversarios', redirectTo: 'aniversarios/lista'},
   {
     path: 'aniversarios', component: AniversariosComponent,
-    children: [
+    children:
+    [
       { path: 'detalhe/:id', component: AniversarioDetalheComponent },
       { path: 'detalhe', component: AniversarioDetalheComponent },
       { path: 'lista', component: AniversarioListaComponent }
     ]
   },
-  { path: 'parentescos', component: ParentescosComponent },
+  { path: 'parentescos', redirectTo: 'parentescos/lista'},
+  {
+    path: 'parentescos', component: ParentescosComponent,
+    children:
+    [
+      { path: 'detalhe/:id', component: ParentescoDetalheComponent },
+      { path: 'detalhe', component: ParentescoDetalheComponent },
+      { path: 'lista', component: ParentescoListaComponent }
+    ]
+  },
   { path: 'admin', component: AdminComponent },
   { path: 'dashboard', component: DashboardComponent },
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },

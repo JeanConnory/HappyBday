@@ -20,15 +20,6 @@ export class AniversarioDetalheComponent implements OnInit {
   form!: FormGroup;
   estadoSalvar = 'post';
 
-  constructor(private fb: FormBuilder,
-    private localeService: BsLocaleService,
-    private router: ActivatedRoute,
-    private aniversarioService: AniversarioService,
-    private spinner: NgxSpinnerService,
-    private toastr: ToastrService) {
-    this.localeService.use('pt-br');
-  }
-
   get f(): any {
     return this.form.controls;
   }
@@ -40,6 +31,38 @@ export class AniversarioDetalheComponent implements OnInit {
       containerClass: 'theme-default',
       showWeekNumbers: false
     };
+  }
+
+  constructor(private fb: FormBuilder,
+    private localeService: BsLocaleService,
+    private router: ActivatedRoute,
+    private aniversarioService: AniversarioService,
+    private spinner: NgxSpinnerService,
+    private toastr: ToastrService) {
+    this.localeService.use('pt-br');
+  }
+
+  ngOnInit(): void {
+    this.carregarAniversario();
+    this.validation();
+  }
+
+  public resetForm(): void {
+    this.form.reset();
+  }
+
+  public cssValidator(campoForm: FormControl): any {
+    return { 'is-invalid': campoForm.errors && campoForm.touched }
+  }
+
+  public validation(): void {
+    this.form = this.fb.group({
+      nome: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(150)]],
+      dataAniversario: ['', Validators.required],
+      telefone: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      imagemUrl: ['', Validators.required]
+    });
   }
 
   public carregarAniversario() {
@@ -63,30 +86,6 @@ export class AniversarioDetalheComponent implements OnInit {
       );
     }
   }
-
-  ngOnInit(): void {
-    this.carregarAniversario();
-    this.validation();
-  }
-
-  public validation(): void {
-    this.form = this.fb.group({
-      nome: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(150)]],
-      dataAniversario: ['', Validators.required],
-      telefone: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      imagemUrl: ['', Validators.required]
-    });
-  }
-
-  public resetForm(): void {
-    this.form.reset();
-  }
-
-  public cssValidator(campoForm: FormControl): any {
-    return { 'is-invalid': campoForm.errors && campoForm.touched }
-  }
-
 
   public salvarAlteracao(): void {
     this.spinner.show();
@@ -117,7 +116,7 @@ export class AniversarioDetalheComponent implements OnInit {
       }
     }
   }
-
+}
   // public salvarAlteracaoRefatorado(): void {
   //   this.spinner.show();
   //   if (this.form.valid) {
@@ -136,4 +135,3 @@ export class AniversarioDetalheComponent implements OnInit {
   //     );
   //   }
   // }
-}
