@@ -8,6 +8,9 @@ import { ToastrService } from 'ngx-toastr';
 
 import { Aniversario } from '@app/models/Aniversario';
 import { AniversarioService } from '@app/services/aniversario.service';
+import { Parentesco } from '@app/models/Parentesco';
+import { ParentescoService } from '@app/services/parentesco.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-aniversario-detalhe',
@@ -19,6 +22,8 @@ export class AniversarioDetalheComponent implements OnInit {
   aniversario = {} as Aniversario;
   form!: FormGroup;
   estadoSalvar = 'post';
+  parentescos: Parentesco[] = [];
+  //parentescos: Observable<Parentesco[]>;
 
   get f(): any {
     return this.form.controls;
@@ -38,13 +43,17 @@ export class AniversarioDetalheComponent implements OnInit {
     private router: ActivatedRoute,
     private aniversarioService: AniversarioService,
     private spinner: NgxSpinnerService,
-    private toastr: ToastrService) {
+    private toastr: ToastrService,
+    private parentescoService: ParentescoService) {
     this.localeService.use('pt-br');
   }
 
   ngOnInit(): void {
     this.carregarAniversario();
     this.validation();
+     this.parentescoService.getParentescos().subscribe( dados => {
+       this.parentescos = dados;
+     });
   }
 
   public resetForm(): void {
@@ -61,7 +70,8 @@ export class AniversarioDetalheComponent implements OnInit {
       dataAniversario: ['', Validators.required],
       telefone: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      imagemUrl: ['', Validators.required]
+      imagemUrl: ['', Validators.required],
+      parentescoId: ['', Validators.required]
     });
   }
 
@@ -69,9 +79,7 @@ export class AniversarioDetalheComponent implements OnInit {
     const aniversarioIdParam = this.router.snapshot.paramMap.get('id');
     if (aniversarioIdParam != null) {
       this.spinner.show();
-
       this.estadoSalvar = 'put';
-
       this.aniversarioService.getAniversarioById(+aniversarioIdParam).subscribe(
         (aniversario: Aniversario) => {
           this.aniversario = { ...aniversario };

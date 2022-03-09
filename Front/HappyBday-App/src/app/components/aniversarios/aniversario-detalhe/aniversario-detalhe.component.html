@@ -24,22 +24,17 @@
         </div>
         <div class="form-group col">
           <label>Parentesco</label>
-          <select class="form-control">
-            <option value=""></option>
-            <option value="1">Pai</option>
-            <option value="2">Mãe</option>
-            <option value="3">Namorado(a)/Conjuge</option>
-            <option value="4">Irmão/Irmã</option>
-            <option value="5">Primo(a)</option>
-            <option value="6">Tio(a)</option>
-            <option value="7">Amigo(a)</option>
+          <select id="parentescoId" class="form-control" formControlName="parentescoId" [ngClass]="cssValidator(f.parentescoId)">
+            <option value="">Selecione um Parentesco</option>
+            <option *ngFor="let parentesco of parentescos" [value]="parentesco.id">{{parentesco.descricao}}</option>
           </select>
+          <div *ngIf="f.parentescoId.errors?.required" class="invalid-feedback">Parentesco é obrigatório</div>
         </div>
       </div>
       <div class="form-row">
         <div class="form-group col-md-2">
           <label>Telefone</label>
-          <input type="text" class="form-control" formControlName="telefone" placeholder="(000) 90000-0000"
+          <input type="text" class="form-control" formControlName="telefone" placeholder="(00) 90000-0000"
           [ngClass]="cssValidator(f.telefone)">
           <div *ngIf="f.telefone.errors?.required" class="invalid-feedback">Telefone é obrigatório</div>
         </div>

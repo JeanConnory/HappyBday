@@ -24,7 +24,9 @@ namespace HappyBday.Application.Dtos
 
         [RegularExpression(@".*\.(gif|jpe?g|bmp|png|)$", ErrorMessage = "Não é uma imagem válida. (gif, jpg, jpeg, bmp ou png)")]
         public string ImagemUrl { get; set; }
-        
+
+        public int ParentescoId { get; set; }
+
         public ParentescoDto Parentesco { get; set; }
     }
 }
