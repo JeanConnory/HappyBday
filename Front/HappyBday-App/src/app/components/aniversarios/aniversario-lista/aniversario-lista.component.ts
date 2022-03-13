@@ -5,6 +5,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { Aniversario } from 'src/app/models/Aniversario';
 import { AniversarioService } from 'src/app/services/aniversario.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-aniversario-lista',
@@ -52,6 +53,12 @@ export class AniversarioListaComponent implements OnInit {
 
   public alterarImagem(): void {
     this.exibirImg = !this.exibirImg;
+  }
+
+  public mostraImagem(imagemURL: string): string {
+    return (imagemURL !== '')
+      ? `${environment.apiURL}resources/images/${imagemURL}`
+      : 'assets/sem_imagem.png';
   }
 
   public carregarAniversarios(): void {

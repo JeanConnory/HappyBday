@@ -1,68 +1,108 @@
-<div class="card rounded shadow-sm">
-  <form [formGroup]="form">
-    <div class="p-3">
-      <!-- <p>Form value: {{form.value | json}}</p>
-      <p>Form valid: {{form.status | json}}</p> -->
+<div class="row">
+  <div [ngClass]="{'col-md-8 pr-0': modoEditar, 'col-md-12': !modoEditar}">
+    <div class="card rounded shadow-sm">
+      <form [formGroup]="form">
+        <div class="p-3">
+          <!-- <p>Form value: {{form.value | json}}</p>
+          <p>Form valid: {{form.status | json}}</p> -->
+          <div class="form-row">
+            <div class="form-group col-md-12">
+              <label>Nome</label>
+              <input type="text" class="form-control" formControlName="nome" placeholder="Insira o Nome" [(ngModel)]="aniversario.nome"
+                [ngClass]="cssValidator(f.nome)">
+              <div *ngIf="f.nome.errors?.required" class="invalid-feedback">Nome é obrigatório</div>
+              <div *ngIf="f.nome.errors?.minlength" class="invalid-feedback">Nome deve ter no mínimo 4 caracteres</div>
+              <div *ngIf="f.nome.errors?.maxlength" class="invalid-feedback">Nome deve ter no máximo 150 caracteres
+              </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-4">
+              <label>Data de Aniversário</label>
+              <input type="datetime" class="form-control" formControlName="dataAniversario"
+                placeholder="Insira a Data de Aniversário" value="{{aniversario.dataAniversario}}" bsDatepicker
+                [bsConfig]="bsConfig" [ngClass]="cssValidator(f.dataAniversario)">
+              <div *ngIf="f.dataAniversario.errors?.required" class="invalid-feedback">Data de Aniversário é obrigatório
+              </div>
+            </div>
+            <div class="form-group col">
+              <label>Parentesco</label>
+              <select id="parentescoId" class="form-control" formControlName="parentescoId"
+                [ngClass]="cssValidator(f.parentescoId)">
+                <option value="">Selecione um Parentesco</option>
+                <option *ngFor="let parentesco of parentescos" [value]="parentesco.id">{{parentesco.descricao}}</option>
+              </select>
+              <div *ngIf="f.parentescoId.errors?.required" class="invalid-feedback">Parentesco é obrigatório</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>Telefone</label>
+              <input type="text" class="form-control" formControlName="telefone" placeholder="(00) 90000-0000"
+                [ngClass]="cssValidator(f.telefone)" [(ngModel)]="aniversario.telefone">
+              <div *ngIf="f.telefone.errors?.required" class="invalid-feedback">Telefone é obrigatório</div>
+            </div>
+            <div class="form-group col-md-6">
+              <label>E-mail</label>
+              <input type="email" class="form-control" formControlName="email" placeholder="e-mail"
+                [ngClass]="cssValidator(f.email)" [(ngModel)]="aniversario.email">
+              <div *ngIf="f.email.errors?.required" class="invalid-feedback">E-mail é obrigatório</div>
+              <div *ngIf="f.email.errors?.email" class="invalid-feedback">E-mail é inválido</div>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="d-flex">
+            <button class="btn btn-outline-secondary mr-auto border" (click)="resetForm()">
+              Cancelar Alteração
+            </button>
+            <button class="btn btn-success" [disabled]="!form.valid" (click)="salvarAlteracao()">
+              <!-- <span class="spinner-border spinner-border-sm mr-1"></span> -->
+              Salvar Aniversário
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="col-md-4" *ngIf="modoEditar">
+    <div [formGroup]="form" class="card-evento-view shadow-sm">
       <div class="form-row">
-        <div class="form-group col-md-12">
-          <label>Nome</label>
-          <input type="text" class="form-control" formControlName="nome" placeholder="Insira o Nome"
-            [ngClass]="cssValidator(f.nome)">
-          <div *ngIf="f.nome.errors?.required" class="invalid-feedback">Nome é obrigatório</div>
-          <div *ngIf="f.nome.errors?.minlength" class="invalid-feedback">Nome deve ter no mínimo 4 caracteres</div>
-          <div *ngIf="f.nome.errors?.maxlength" class="invalid-feedback">Nome deve ter no máximo 150 caracteres</div>
+        <div class="form-group m-0">
+          <input type="file" #file (change)="onFileChange($event)" class="form-control is-invalid" placeholder="" style="display: none">
         </div>
       </div>
-      <div class="form-row">
-        <div class="form-group col-md-4">
-          <label>Data de Aniversário</label>
-          <input type="datetime" class="form-control" formControlName="dataAniversario" placeholder="Insira a Data de Aniversário"
-          value="{{aniversario.dataAniversario}}"
-          bsDatepicker [bsConfig]="bsConfig"
-          [ngClass]="cssValidator(f.dataAniversario)">
-          <div *ngIf="f.dataAniversario.errors?.required" class="invalid-feedback">Data de Aniversário é obrigatório</div>
+      <div class="card profile-card-2">
+        <div class="card-img-block">
+          <img class="image" [src]="imagemURL" class="img-fluid" (click)="file.click()" alt="Card image cap" tooltip="Upload de Nova Imagem"
+          [adaptivePosition]="false" placement="bottom" />
         </div>
-        <div class="form-group col">
-          <label>Parentesco</label>
-          <select id="parentescoId" class="form-control" formControlName="parentescoId" [ngClass]="cssValidator(f.parentescoId)">
-            <option value="">Selecione um Parentesco</option>
-            <option *ngFor="let parentesco of parentescos" [value]="parentesco.id">{{parentesco.descricao}}</option>
-          </select>
-          <div *ngIf="f.parentescoId.errors?.required" class="invalid-feedback">Parentesco é obrigatório</div>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group col-md-2">
-          <label>Telefone</label>
-          <input type="text" class="form-control" formControlName="telefone" placeholder="(00) 90000-0000"
-          [ngClass]="cssValidator(f.telefone)">
-          <div *ngIf="f.telefone.errors?.required" class="invalid-feedback">Telefone é obrigatório</div>
-        </div>
-        <div class="form-group col-md-4">
-          <label>E-mail</label>
-          <input type="email" class="form-control" formControlName="email" placeholder="e-mail"
-          [ngClass]="cssValidator(f.email)">
-          <div *ngIf="f.email.errors?.required" class="invalid-feedback">E-mail é obrigatório</div>
-          <div *ngIf="f.email.errors?.email" class="invalid-feedback">E-mail é inválido</div>
-        </div>
-        <div class="form-group col-md-4">
-          <label>Imagem</label>
-          <input type="text" class="form-control" formControlName="imagemUrl" placeholder="imagem"
-          [ngClass]="cssValidator(f.imagemUrl)">
-          <div *ngIf="f.imagemUrl.errors?.required" class="invalid-feedback">Imagem é obrigatório</div>
+        <div class="card-body pt-3">
+          <h4>{{aniversario.nome}}</h4>
+          <p class="card-text">
+            <b>Parentesco:</b> {{aniversario.parentesco?.descricao}}
+            <br>
+            <b>Data do Aniversário:</b> {{aniversario.dataAniversario}}
+          </p>
+          <hr>
+          <p class="card-text">
+            <b>Contatos</b><br>
+            <small class="text-muted">Telefone: {{aniversario.telefone}}</small>
+            <br>
+            <small class="text-muted">e-mail: {{aniversario.email}}</small>
+          </p>
+          <div class="row">
+            <div class="icon-block col-md-8 iconesSociais">
+              <a href="">
+                <i class=""></i>
+              </a>
+            </div>
+            <!--div class="col-md-4 d-flex justify-content-center">
+              <a href="#" class="btn btn-outline-primary">Participar</a>
+            </div-->
+          </div>
         </div>
       </div>
     </div>
-    <div class="card-footer">
-      <div class="d-flex">
-        <button class="btn btn-outline-secondary mr-auto border" (click)="resetForm()">
-          Cancelar Alteração
-        </button>
-        <button class="btn btn-success" [disabled]="!form.valid" (click)="salvarAlteracao()">
-          <!-- <span class="spinner-border spinner-border-sm mr-1"></span> -->
-          Salvar Aniversário
-        </button>
-      </div>
-    </div>
-  </form>
+  </div>
 </div>

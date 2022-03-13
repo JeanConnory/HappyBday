@@ -3,12 +3,13 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Aniversario } from '../models/Aniversario';
 import { take } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 
 @Injectable(
   //  { providedIn: 'root' }
 )
 export class AniversarioService {
-  baseURL = 'https://localhost:5001/api/aniversarios';
+  baseURL = environment.apiURL + 'api/aniversarios';
 
   constructor(private http: HttpClient) { }
 
@@ -34,5 +35,13 @@ export class AniversarioService {
 
   public deleteAniversario(id: number): Observable<any> {
     return this.http.delete(`${this.baseURL}/${id}`).pipe(take(1));
+  }
+
+  postUpload(aniversarioId: number, file: File): Observable<Aniversario> {
+    const fileToUpload = file[0] as File;
+    const formData = new FormData();
+    formData.append('file', fileToUpload);
+
+    return this.http.post<Aniversario>(`${this.baseURL}/upload-image/${aniversarioId}`, formData).pipe(take(1));
   }
 }

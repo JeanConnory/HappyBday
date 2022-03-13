@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -11,6 +11,7 @@ import { AniversarioService } from '@app/services/aniversario.service';
 import { Parentesco } from '@app/models/Parentesco';
 import { ParentescoService } from '@app/services/parentesco.service';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-aniversario-detalhe',
@@ -20,13 +21,20 @@ import { Observable } from 'rxjs';
 export class AniversarioDetalheComponent implements OnInit {
 
   aniversario = {} as Aniversario;
+  aniversarioId!: number;
   form!: FormGroup;
   estadoSalvar = 'post';
   parentescos: Parentesco[] = [];
+  imagemURL = 'assets/upload.png';
+  file!: File;
   //parentescos: Observable<Parentesco[]>;
 
   get f(): any {
     return this.form.controls;
+  }
+
+  get modoEditar(): boolean {
+    return this.estadoSalvar === 'put';
   }
 
   get bsConfig(): any {
@@ -40,7 +48,8 @@ export class AniversarioDetalheComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
     private localeService: BsLocaleService,
-    private router: ActivatedRoute,
+    private activatedRouter: ActivatedRoute,
+    private router: Router,
     private aniversarioService: AniversarioService,
     private spinner: NgxSpinnerService,
     private toastr: ToastrService,
@@ -51,9 +60,9 @@ export class AniversarioDetalheComponent implements OnInit {
   ngOnInit(): void {
     this.carregarAniversario();
     this.validation();
-     this.parentescoService.getParentescos().subscribe( dados => {
-       this.parentescos = dados;
-     });
+    this.parentescoService.getParentescos().subscribe(dados => {
+      this.parentescos = dados;
+    });
   }
 
   public resetForm(): void {
@@ -70,20 +79,23 @@ export class AniversarioDetalheComponent implements OnInit {
       dataAniversario: ['', Validators.required],
       telefone: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      imagemUrl: ['', Validators.required],
+      imagemUrl: [''],
       parentescoId: ['', Validators.required]
     });
   }
 
   public carregarAniversario() {
-    const aniversarioIdParam = this.router.snapshot.paramMap.get('id');
-    if (aniversarioIdParam != null) {
+    this.aniversarioId = +this.activatedRouter.snapshot.paramMap.get('id');
+    if (this.aniversarioId != null && this.aniversarioId !== 0) {
       this.spinner.show();
       this.estadoSalvar = 'put';
-      this.aniversarioService.getAniversarioById(+aniversarioIdParam).subscribe(
+      this.aniversarioService.getAniversarioById(this.aniversarioId).subscribe(
         (aniversario: Aniversario) => {
           this.aniversario = { ...aniversario };
           this.form.patchValue(this.aniversario);
+          if(this.aniversario.imagemUrl !== '') {
+            this.imagemURL = environment.apiURL + 'resources/images/' + this.aniversario.imagemUrl;
+          }
         },
         (error: any) => {
           this.spinner.hide();
@@ -101,7 +113,10 @@ export class AniversarioDetalheComponent implements OnInit {
       if (this.estadoSalvar === 'post') {
         this.aniversario = { ...this.form.value };
         this.aniversarioService.post(this.aniversario).subscribe(
-          () => this.toastr.success('Aniversário salvo com sucesso!', 'Sucesso'),
+          (aniversarioRetorno: Aniversario) => {
+            this.toastr.success('Aniversário salvo com sucesso!', 'Sucesso');
+            this.router.navigate([`aniversarios/detalhe/${aniversarioRetorno.id}`]);
+          },
           (error: any) => {
             console.error(error);
             this.spinner.hide();
@@ -113,7 +128,10 @@ export class AniversarioDetalheComponent implements OnInit {
       else {
         this.aniversario = { id: this.aniversario.id, ...this.form.value };
         this.aniversarioService.put(this.aniversario).subscribe(
-          () => this.toastr.success('Aniversário salvo com sucesso!', 'Sucesso'),
+          (aniversarioRetorno: Aniversario) => {
+            this.toastr.success('Aniversário salvo com sucesso!', 'Sucesso');
+            this.router.navigate([`aniversarios/detalhe/${aniversarioRetorno.id}`]);
+          },
           (error: any) => {
             console.error(error);
             this.spinner.hide();
@@ -124,6 +142,32 @@ export class AniversarioDetalheComponent implements OnInit {
       }
     }
   }
+
+
+  onFileChange(ev: any) {
+    const reader = new FileReader();
+    reader.onload = (event: any) => this.imagemURL = event?.target.result;
+    this.file = ev.target.files;
+    reader.readAsDataURL(this.file[0]);
+
+    this.uploadImagem()
+  }
+
+  uploadImagem(): void {
+    this.spinner.show();
+    this.aniversarioService.postUpload(this.aniversarioId, this.file).subscribe(
+      () => {
+        this.carregarAniversario();
+        this.toastr.success('Imagem atualizada com sucesso', 'Sucesso!');
+      },
+      (error: any) => {
+        this.toastr.error('Erro ao fazer upload de imagem', 'Erro!');
+        console.error(error);
+      }
+    ).add(() => this.spinner.hide());
+  }
+
+
 }
   // public salvarAlteracaoRefatorado(): void {
   //   this.spinner.show();

@@ -34,7 +34,7 @@
     <tbody *ngIf="aniversarios && aniversarios.length">
       <tr *ngFor="let niver of aniversariosFiltrados" (click)="detalheAniversario(niver.id)" style="cursor: pointer;">
         <td class="d-none d-md-table-cell">
-          <img [collapse]="!exibirImg" [isAnimated]="true" src="/assets/{{niver.imagemUrl}}"
+          <img [collapse]="!exibirImg" [isAnimated]="true" [src]="mostraImagem(niver.imagemUrl)"
             [style.width.px]="larguraImg" [style.margin.px]="margemImg">
         </td>
         <td>{{niver.id}}</td>

@@ -49,6 +49,12 @@ namespace HappyBday.Persistence
                       
             query = query.AsNoTracking().OrderBy(a => a.DataAniversario)
                          .Where(a => a.Id == aniversarioId);
+            
+            if(includeParentesco)
+            {
+                query = query
+                            .Include(p => p.Parentesco);
+            }
 
             return await query.FirstOrDefaultAsync();
         }
