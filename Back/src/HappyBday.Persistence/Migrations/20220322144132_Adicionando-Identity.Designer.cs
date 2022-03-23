@@ -3,14 +3,16 @@ using System;
 using HappyBday.Persistence.Contexto;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace HappyBday.Persistence.Migrations
 {
     [DbContext(typeof(HappyBdayContext))]
-    partial class HappyBdayContextModelSnapshot : ModelSnapshot
+    [Migration("20220322144132_Adicionando-Identity")]
+    partial class AdicionandoIdentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

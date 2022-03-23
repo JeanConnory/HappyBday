@@ -1,4 +1,5 @@
 using System;
+using HappyBday.Domain.Identity;
 
 namespace HappyBday.Domain
 {
@@ -19,5 +20,9 @@ namespace HappyBday.Domain
         public int? ParentescoId { get; set; }
 
         public Parentesco Parentesco { get; set; }
+
+        public int? UserId { get; set; }
+
+        public User User { get; set; }
     }
 }
