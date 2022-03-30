@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Collections.Generic;
 
 namespace HappyBday.API
 {
@@ -67,13 +68,13 @@ namespace HappyBday.API
                 });
 
             services.AddControllers()
-                .AddJsonOptions(options => 
+                .AddJsonOptions(options =>
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter())
                 )
                 .AddNewtonsoftJson(x =>
                     x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
                 );
-                    
+
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddScoped<IAniversarioService, AniversarioService>();
@@ -88,9 +89,37 @@ namespace HappyBday.API
 
             services.AddCors();
 
-            services.AddSwaggerGen(c =>
+            services.AddSwaggerGen(options =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "HappyBday.API", Version = "v1" });
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "HappyBday.API", Version = "v1" });
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = @"JWT Authorization header usando Bearer.
+                                    Entre com 'Bearer ' [espaço] então coloque seu token.
+                                    Exemplo: 'Bearer 12345abcde'",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
+
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                {
+                    {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        },
+                        Scheme = "oauth2",
+                        Name = "Bearer",
+                        In = ParameterLocation.Header
+                    },
+                    new List<string>()
+                    }
+                });
             });
         }
 
@@ -103,13 +132,13 @@ namespace HappyBday.API
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "HappyBday.API v1"));
             }
-             
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
 
             app.UseAuthentication();
-            
+
             app.UseAuthorization();
 
             app.UseCors(cors => cors
@@ -117,7 +146,8 @@ namespace HappyBday.API
                             .AllowAnyMethod()
                             .AllowAnyOrigin());
 
-            app.UseStaticFiles(new StaticFileOptions() {
+            app.UseStaticFiles(new StaticFileOptions()
+            {
                 FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Resources")),
                 RequestPath = new PathString("/Resources")
             });

@@ -1,6 +1,7 @@
 using AutoMapper;
 using HappyBday.Application.Dtos;
 using HappyBday.Domain;
+using HappyBday.Domain.Identity;
 
 namespace HappyBday.API.Helpers
 {
@@ -10,6 +11,10 @@ namespace HappyBday.API.Helpers
         {
             CreateMap<Aniversario, AniversarioDto>().ReverseMap();
             CreateMap<Parentesco, ParentescoDto>().ReverseMap();
+
+            CreateMap<User, UserDto>().ReverseMap();
+            CreateMap<User, UserLoginDto>().ReverseMap();
+            CreateMap<User, UserUpdateDto>().ReverseMap();
         }
     }
 }

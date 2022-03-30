@@ -16,7 +16,7 @@ namespace HappyBday.Persistence
             _context = context;
         }
 
-        public async Task<Aniversario[]> GetAllAniversariosAsync(bool includeParentesco = false)
+        public async Task<Aniversario[]> GetAllAniversariosAsync(int userId, bool includeParentesco = false)
         {
             IQueryable<Aniversario> query = _context.Aniversarios;
             
@@ -24,12 +24,14 @@ namespace HappyBday.Persistence
             {
                 query = query.Include(a => a.Parentesco);
             }            
-            query = query.AsNoTracking().OrderBy(a => a.DataAniversario);
+            query = query.AsNoTracking()
+                            .Where(a => a.UserId == userId)
+                            .OrderBy(a => a.DataAniversario);
 
             return await query.ToArrayAsync();
         }
 
-        public async Task<Aniversario[]> GetAllAniversariosByNomeAsync(string nome, bool includeParentesco = false)
+        public async Task<Aniversario[]> GetAllAniversariosByNomeAsync(int userId, string nome, bool includeParentesco = false)
         {
             IQueryable<Aniversario> query = _context.Aniversarios;
             
@@ -38,17 +40,18 @@ namespace HappyBday.Persistence
                 query = query.Include(a => a.Parentesco);
             }            
             query = query.AsNoTracking().OrderBy(a => a.DataAniversario)
-                         .Where(a => a.Nome.ToLower().Contains(nome.ToLower()));
+                         .Where(a => a.Nome.ToLower().Contains(nome.ToLower()) && 
+                                     a.UserId == userId);
 
             return await query.ToArrayAsync();
         }
 
-        public async Task<Aniversario> GetAniversarioByIdAsync(int aniversarioId, bool includeParentesco = false)
+        public async Task<Aniversario> GetAniversarioByIdAsync(int userId, int aniversarioId, bool includeParentesco = false)
         {
             IQueryable<Aniversario> query = _context.Aniversarios;
                       
             query = query.AsNoTracking().OrderBy(a => a.DataAniversario)
-                         .Where(a => a.Id == aniversarioId);
+                         .Where(a => a.Id == aniversarioId && a.UserId == userId);
             
             if(includeParentesco)
             {

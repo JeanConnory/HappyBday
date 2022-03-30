@@ -28,5 +28,9 @@ namespace HappyBday.Application.Dtos
         public int ParentescoId { get; set; }
 
         public ParentescoDto Parentesco { get; set; }
+
+        public int UserId { get; set; }
+
+        public UserDto UserDto { get; set; }
     }
 }

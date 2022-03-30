@@ -21,16 +21,17 @@ namespace HappyBday.Application
             _mapper = mapper;
         }
 
-        public async Task<AniversarioDto> AddAniversario(AniversarioDto model)
+        public async Task<AniversarioDto> AddAniversario(int userId, AniversarioDto model)
         {
             try
             {
                 var aniversario = _mapper.Map<Aniversario>(model);
+                aniversario.UserId = userId;
 
                 _geralPersist.Add<Aniversario>(aniversario);
                 if (await _geralPersist.SaveChangesAsync())
                 {
-                    var aniversarioRetorno = await _aniversarioPersist.GetAniversarioByIdAsync(aniversario.Id, false);
+                    var aniversarioRetorno = await _aniversarioPersist.GetAniversarioByIdAsync(userId, aniversario.Id, false);
 
                     return _mapper.Map<AniversarioDto>(aniversarioRetorno);
                 }
@@ -42,14 +43,15 @@ namespace HappyBday.Application
             }
         }
 
-        public async Task<AniversarioDto> UpdateAniversario(int aniversarioId, AniversarioDto model)
+        public async Task<AniversarioDto> UpdateAniversario(int userId, int aniversarioId, AniversarioDto model)
         {
             try
             {
-                var aniversario = await _aniversarioPersist.GetAniversarioByIdAsync(aniversarioId, false);
+                var aniversario = await _aniversarioPersist.GetAniversarioByIdAsync(userId, aniversarioId, false);
                 if (aniversario == null) return null;
 
                 model.Id = aniversarioId;
+                model.UserId = userId;
 
                 _mapper.Map(model, aniversario);
 
@@ -57,7 +59,7 @@ namespace HappyBday.Application
 
                 if (await _geralPersist.SaveChangesAsync())
                 {
-                    var aniversarioRetorno = await _aniversarioPersist.GetAniversarioByIdAsync(aniversario.Id, false);
+                    var aniversarioRetorno = await _aniversarioPersist.GetAniversarioByIdAsync(userId, aniversario.Id, false);
 
                     return _mapper.Map<AniversarioDto>(aniversarioRetorno);
                 }
@@ -69,11 +71,11 @@ namespace HappyBday.Application
             }
         }
 
-        public async Task<bool> DeleteAniversario(int aniversarioId)
+        public async Task<bool> DeleteAniversario(int userId, int aniversarioId)
         {
             try
             {
-                var aniversario = await _aniversarioPersist.GetAniversarioByIdAsync(aniversarioId, false);
+                var aniversario = await _aniversarioPersist.GetAniversarioByIdAsync(userId, aniversarioId, false);
                 if (aniversario == null) throw new Exception("Aniversario não foi encontrado");
 
                 _geralPersist.Delete<Aniversario>(aniversario);
@@ -85,11 +87,11 @@ namespace HappyBday.Application
             }
         }
 
-        public async Task<AniversarioDto[]> GetAllAniversariosAsync(bool includeParentesco = false)
+        public async Task<AniversarioDto[]> GetAllAniversariosAsync(int userId, bool includeParentesco = false)
         {
             try
             {
-                var aniversarios = await _aniversarioPersist.GetAllAniversariosAsync(includeParentesco);
+                var aniversarios = await _aniversarioPersist.GetAllAniversariosAsync(userId, includeParentesco);
                 if (aniversarios == null) return null;
 
                 var resultado = _mapper.Map<AniversarioDto[]>(aniversarios);
@@ -102,11 +104,11 @@ namespace HappyBday.Application
             }
         }
 
-        public async Task<AniversarioDto[]> GetAllAniversariosByNomeAsync(string nome, bool includeParentesco = false)
+        public async Task<AniversarioDto[]> GetAllAniversariosByNomeAsync(int userId, string nome, bool includeParentesco = false)
         {
             try
             {
-                var aniversarios = await _aniversarioPersist.GetAllAniversariosByNomeAsync(nome, includeParentesco);
+                var aniversarios = await _aniversarioPersist.GetAllAniversariosByNomeAsync(userId, nome, includeParentesco);
                 if (aniversarios == null) return null;
 
                 var resultado = _mapper.Map<AniversarioDto[]>(aniversarios);
@@ -119,11 +121,11 @@ namespace HappyBday.Application
             }
         }
 
-        public async Task<AniversarioDto> GetAniversarioByIdAsync(int aniversarioId, bool includeParentesco = false)
+        public async Task<AniversarioDto> GetAniversarioByIdAsync(int userId, int aniversarioId, bool includeParentesco = false)
         {
             try
             {
-                var aniversario = await _aniversarioPersist.GetAniversarioByIdAsync(aniversarioId, includeParentesco);
+                var aniversario = await _aniversarioPersist.GetAniversarioByIdAsync(userId, aniversarioId, includeParentesco);
                 if (aniversario == null) return null;
 
                 var resultado = _mapper.Map<AniversarioDto>(aniversario);

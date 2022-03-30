@@ -7,19 +7,27 @@ using HappyBday.Application.Dtos;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using System.Linq;
+using HappyBday.Application;
+using HappyBday.API.Extensions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HappyBday.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class AniversariosController : ControllerBase
     {
         private readonly IAniversarioService _aniversarioService;
         private readonly IWebHostEnvironment _hostEnvironment;
+        private readonly IAccountService _accountService;
 
-        public AniversariosController(IAniversarioService aniversarioService, IWebHostEnvironment hostEnvironment)
+        public AniversariosController(IAniversarioService aniversarioService,
+                                        IAccountService accountService,
+                                        IWebHostEnvironment hostEnvironment)
         {
             _hostEnvironment = hostEnvironment;
+            _accountService = accountService;
             _aniversarioService = aniversarioService;
         }
 
@@ -28,7 +36,7 @@ namespace HappyBday.API.Controllers
         {
             try
             {
-                var aniversarios = await _aniversarioService.GetAllAniversariosAsync(true);
+                var aniversarios = await _aniversarioService.GetAllAniversariosAsync(User.GetUserId(), true);
                 if (aniversarios == null) return NoContent();
 
                 return Ok(aniversarios);
@@ -44,7 +52,7 @@ namespace HappyBday.API.Controllers
         {
             try
             {
-                var aniversario = await _aniversarioService.GetAniversarioByIdAsync(id, true);
+                var aniversario = await _aniversarioService.GetAniversarioByIdAsync(User.GetUserId(), id, true);
                 if (aniversario == null) return NoContent();
 
                 return Ok(aniversario);
@@ -60,7 +68,7 @@ namespace HappyBday.API.Controllers
         {
             try
             {
-                var aniversario = await _aniversarioService.GetAllAniversariosByNomeAsync(nome, true);
+                var aniversario = await _aniversarioService.GetAllAniversariosByNomeAsync(User.GetUserId(), nome, true);
                 if (aniversario == null) return NoContent();
 
                 return Ok(aniversario);
@@ -76,7 +84,7 @@ namespace HappyBday.API.Controllers
         {
             try
             {
-                var aniversario = await _aniversarioService.GetAniversarioByIdAsync(aniversarioId, true);
+                var aniversario = await _aniversarioService.GetAniversarioByIdAsync(User.GetUserId(), aniversarioId, true);
                 if (aniversario == null) return NoContent();
 
                 var file = Request.Form.Files[0];
@@ -86,7 +94,7 @@ namespace HappyBday.API.Controllers
                     aniversario.ImagemUrl = await SaveImage(file);
                 }
 
-                var aniversarioRetorno = await _aniversarioService.UpdateAniversario(aniversarioId, aniversario);
+                var aniversarioRetorno = await _aniversarioService.UpdateAniversario(User.GetUserId(), aniversarioId, aniversario);
 
                 return Ok(aniversarioRetorno);
             }
@@ -101,7 +109,7 @@ namespace HappyBday.API.Controllers
         {
             try
             {
-                var aniversario = await _aniversarioService.AddAniversario(model);
+                var aniversario = await _aniversarioService.AddAniversario(User.GetUserId(), model);
                 if (aniversario == null) return NoContent();
 
                 return Ok(aniversario);
@@ -117,7 +125,7 @@ namespace HappyBday.API.Controllers
         {
             try
             {
-                var aniversario = await _aniversarioService.UpdateAniversario(id, model);
+                var aniversario = await _aniversarioService.UpdateAniversario(User.GetUserId(), id, model);
                 if (aniversario == null) return NoContent();
 
                 return Ok(aniversario);
@@ -133,10 +141,10 @@ namespace HappyBday.API.Controllers
         {
             try
             {
-                var aniversario = await _aniversarioService.GetAniversarioByIdAsync(id, true);
+                var aniversario = await _aniversarioService.GetAniversarioByIdAsync(User.GetUserId(), id, true);
                 if (aniversario == null) return NoContent();
 
-                if (await _aniversarioService.DeleteAniversario(id))
+                if (await _aniversarioService.DeleteAniversario(User.GetUserId(), id))
                 {
                     DeleteImage(aniversario.ImagemUrl);
                     return Ok(new { message = "Deletado" });

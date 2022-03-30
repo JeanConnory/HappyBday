@@ -5,11 +5,11 @@ namespace HappyBday.Application.Contratos
 {
     public interface IAniversarioService
     {
-        Task<AniversarioDto> AddAniversario(AniversarioDto model);
-        Task<AniversarioDto> UpdateAniversario(int aniversarioId, AniversarioDto model);
-        Task<bool> DeleteAniversario(int aniversarioId);
-        Task<AniversarioDto[]> GetAllAniversariosAsync(bool includeParentesco = false);
-        Task<AniversarioDto[]> GetAllAniversariosByNomeAsync(string nome, bool includeParentesco = false);
-        Task<AniversarioDto> GetAniversarioByIdAsync(int aniversarioId, bool includeParentesco = false);
+        Task<AniversarioDto> AddAniversario(int userId, AniversarioDto model);
+        Task<AniversarioDto> UpdateAniversario(int userId, int aniversarioId, AniversarioDto model);
+        Task<bool> DeleteAniversario(int userId, int aniversarioId);
+        Task<AniversarioDto[]> GetAllAniversariosAsync(int userId, bool includeParentesco = false);
+        Task<AniversarioDto[]> GetAllAniversariosByNomeAsync(int userId, string nome, bool includeParentesco = false);
+        Task<AniversarioDto> GetAniversarioByIdAsync(int userId, int aniversarioId, bool includeParentesco = false);
     }
 }
