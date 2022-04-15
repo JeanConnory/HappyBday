@@ -9,7 +9,7 @@ namespace HappyBday.Application.Contratos
         Task<bool> UserExists(string userName);
         Task<UserUpdateDto> GetUserByUserNameAsync(string userName);
         Task<SignInResult> CheckPasswordAsync(UserUpdateDto userUpdateDto, string password);
-        Task<UserDto> CreateAccountAsync(UserDto userDto);
+        Task<UserUpdateDto> CreateAccountAsync(UserDto userDto);
         Task<UserUpdateDto> UpdateAccount(UserUpdateDto userUpdateDto);
     }
 }

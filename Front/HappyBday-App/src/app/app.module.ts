@@ -3,7 +3,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
@@ -33,6 +33,9 @@ import { ParentescoListaComponent } from './components/parentescos/parentesco-li
 
 import { AniversarioService } from './services/aniversario.service';
 import { ParentescoService } from './services/parentesco.service';
+import { AccountService } from './services/account.service';
+
+import { JwtInterceptor } from './interceptor/jwt.interceptor';
 
 import { DateTimeFormatPipe } from './helpers/DateTimeFormat.pipe';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
@@ -79,8 +82,10 @@ defineLocale('pt-br', ptBrLocale);
     NgxSpinnerModule
   ],
   providers: [
+    AccountService,
     AniversarioService,
-    ParentescoService
+    ParentescoService,
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

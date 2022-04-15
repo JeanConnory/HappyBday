@@ -10,12 +10,11 @@ import { environment } from 'src/environments/environment';
 )
 export class AniversarioService {
   baseURL = environment.apiURL + 'api/aniversarios';
-  tokenHeader = new HttpHeaders({ 'Authorization': 'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwidW5pcXVlX25hbWUiOiJqZWFuIiwibmJmIjoxNjQ5OTc0NzI3LCJleHAiOjE2NTAwNjExMjcsImlhdCI6MTY0OTk3NDcyN30.wZyIbi81nICCMFthIcpqBCHJfEa_uLvBxGpMXgEBTGWvx9mOQd6iD9eQVV9qLfLMgZUhHlqm8DPhozIDrVtBFA' });
 
   constructor(private http: HttpClient) { }
 
   public getAniversarios(): Observable<Aniversario[]> {
-    return this.http.get<Aniversario[]>(this.baseURL, { headers: this.tokenHeader }).pipe(take(1));
+    return this.http.get<Aniversario[]>(this.baseURL).pipe(take(1));
   }
 
   public getAniversariosByNome(nome: string): Observable<Aniversario[]> {
