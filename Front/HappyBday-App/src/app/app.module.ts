@@ -30,6 +30,7 @@ import { LoginComponent } from './components/user/login/login.component';
 import { RegistrationComponent } from './components/user/registration/registration.component';
 import { ParentescoDetalheComponent } from './components/parentescos/parentesco-detalhe/parentesco-detalhe.component';
 import { ParentescoListaComponent } from './components/parentescos/parentesco-lista/parentesco-lista.component';
+import { HomeComponent } from './components/home/home.component';
 
 import { AniversarioService } from './services/aniversario.service';
 import { ParentescoService } from './services/parentesco.service';
@@ -59,7 +60,8 @@ defineLocale('pt-br', ptBrLocale);
     LoginComponent,
     RegistrationComponent,
     ParentescoDetalheComponent,
-    ParentescoListaComponent
+    ParentescoListaComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
@@ -87,7 +89,6 @@ defineLocale('pt-br', ptBrLocale);
     ParentescoService,
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}
   ],
-  bootstrap: [AppComponent],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

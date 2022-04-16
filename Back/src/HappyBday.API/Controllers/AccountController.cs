@@ -95,13 +95,21 @@ namespace HappyBday.API.Controllers
         {
             try
             {
+                if(userUpdateDto.UserName != User.GetUserName())
+                    return Unauthorized("Usuário Inválido");
+
                 var user = await _accountService.GetUserByUserNameAsync(User.GetUserName());
                 if(user == null) return Unauthorized("Usuário Inválido");
 
                 var userReturn = await _accountService.UpdateAccount(userUpdateDto);
                 if(userReturn == null) return NoContent();
 
-                return Ok(userReturn);
+                return Ok(new 
+                {
+                    userName = userReturn.UserName,
+                    primeiroNome = userReturn.PrimeiroNome,
+                    token = _tokenService.CreateToken(userReturn).Result
+                });
             }
             catch (Exception ex)
             {                
