@@ -10,6 +10,7 @@ using System.Linq;
 using HappyBday.Application;
 using HappyBday.API.Extensions;
 using Microsoft.AspNetCore.Authorization;
+using HappyBday.Persistence.Pagination;
 
 namespace HappyBday.API.Controllers
 {
@@ -32,11 +33,11 @@ namespace HappyBday.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get([FromQuery] PageParams pageParams)
         {
             try
             {
-                var aniversarios = await _aniversarioService.GetAllAniversariosAsync(User.GetUserId(), true);
+                var aniversarios = await _aniversarioService.GetAllAniversariosAsync(User.GetUserId(), pageParams, true);
                 if (aniversarios == null) return NoContent();
 
                 return Ok(aniversarios);
@@ -53,22 +54,6 @@ namespace HappyBday.API.Controllers
             try
             {
                 var aniversario = await _aniversarioService.GetAniversarioByIdAsync(User.GetUserId(), id, true);
-                if (aniversario == null) return NoContent();
-
-                return Ok(aniversario);
-            }
-            catch (Exception ex)
-            {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Erro ao tentar recuperar aniversário. Erro: {ex.Message}");
-            }
-        }
-
-        [HttpGet("{nome}/nome")]
-        public async Task<IActionResult> GetByNome(string nome)
-        {
-            try
-            {
-                var aniversario = await _aniversarioService.GetAllAniversariosByNomeAsync(User.GetUserId(), nome, true);
                 if (aniversario == null) return NoContent();
 
                 return Ok(aniversario);

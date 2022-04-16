@@ -5,6 +5,7 @@ using HappyBday.Application.Contratos;
 using HappyBday.Application.Dtos;
 using HappyBday.Domain;
 using HappyBday.Persistence.Contratos;
+using HappyBday.Persistence.Pagination;
 
 namespace HappyBday.Application
 {
@@ -87,31 +88,19 @@ namespace HappyBday.Application
             }
         }
 
-        public async Task<AniversarioDto[]> GetAllAniversariosAsync(int userId, bool includeParentesco = false)
+        public async Task<PageList<AniversarioDto>> GetAllAniversariosAsync(int userId, PageParams pageParams, bool includeParentesco = false)
         {
             try
             {
-                var aniversarios = await _aniversarioPersist.GetAllAniversariosAsync(userId, includeParentesco);
+                var aniversarios = await _aniversarioPersist.GetAllAniversariosAsync(userId, pageParams, includeParentesco);
                 if (aniversarios == null) return null;
 
-                var resultado = _mapper.Map<AniversarioDto[]>(aniversarios);
+                var resultado = _mapper.Map<PageList<AniversarioDto>>(aniversarios);
 
-                return resultado;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
-
-        public async Task<AniversarioDto[]> GetAllAniversariosByNomeAsync(int userId, string nome, bool includeParentesco = false)
-        {
-            try
-            {
-                var aniversarios = await _aniversarioPersist.GetAllAniversariosByNomeAsync(userId, nome, includeParentesco);
-                if (aniversarios == null) return null;
-
-                var resultado = _mapper.Map<AniversarioDto[]>(aniversarios);
+                resultado.CurrentPage = aniversarios.CurrentPage;
+                resultado.TotalPages = aniversarios.TotalPages;
+                resultado.PageSize = aniversarios.PageSize;
+                resultado.TotalCount = aniversarios.TotalCount;
 
                 return resultado;
             }

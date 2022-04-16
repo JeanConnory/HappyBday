@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using HappyBday.Application.Dtos;
+using HappyBday.Persistence.Pagination;
 
 namespace HappyBday.Application.Contratos
 {
@@ -8,8 +9,7 @@ namespace HappyBday.Application.Contratos
         Task<AniversarioDto> AddAniversario(int userId, AniversarioDto model);
         Task<AniversarioDto> UpdateAniversario(int userId, int aniversarioId, AniversarioDto model);
         Task<bool> DeleteAniversario(int userId, int aniversarioId);
-        Task<AniversarioDto[]> GetAllAniversariosAsync(int userId, bool includeParentesco = false);
-        Task<AniversarioDto[]> GetAllAniversariosByNomeAsync(int userId, string nome, bool includeParentesco = false);
+        Task<PageList<AniversarioDto>> GetAllAniversariosAsync(int userId, PageParams pageParams, bool includeParentesco = false);
         Task<AniversarioDto> GetAniversarioByIdAsync(int userId, int aniversarioId, bool includeParentesco = false);
     }
 }

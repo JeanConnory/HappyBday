@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using HappyBday.Domain;
 using HappyBday.Persistence.Contexto;
 using HappyBday.Persistence.Contratos;
+using HappyBday.Persistence.Pagination;
 using Microsoft.EntityFrameworkCore;
 
 namespace HappyBday.Persistence
@@ -16,34 +17,20 @@ namespace HappyBday.Persistence
             _context = context;
         }
 
-        public async Task<Aniversario[]> GetAllAniversariosAsync(int userId, bool includeParentesco = false)
+        public async Task<PageList<Aniversario>> GetAllAniversariosAsync(int userId, PageParams pageParams, bool includeParentesco = false)
         {
             IQueryable<Aniversario> query = _context.Aniversarios;
-            
+             
             if(includeParentesco)
             {
                 query = query.Include(a => a.Parentesco);
             }            
             query = query.AsNoTracking()
-                            .Where(a => a.UserId == userId)
+                            .Where(a => a.Nome.ToLower().Contains(pageParams.Term .ToLower()) && 
+                                     a.UserId == userId)
                             .OrderBy(a => a.DataAniversario);
 
-            return await query.ToArrayAsync();
-        }
-
-        public async Task<Aniversario[]> GetAllAniversariosByNomeAsync(int userId, string nome, bool includeParentesco = false)
-        {
-            IQueryable<Aniversario> query = _context.Aniversarios;
-            
-            if(includeParentesco)
-            {
-                query = query.Include(a => a.Parentesco);
-            }            
-            query = query.AsNoTracking().OrderBy(a => a.DataAniversario)
-                         .Where(a => a.Nome.ToLower().Contains(nome.ToLower()) && 
-                                     a.UserId == userId);
-
-            return await query.ToArrayAsync();
+            return await PageList<Aniversario>.CreateAsync(query, pageParams.PageNumber, pageParams.pageSize);
         }
 
         public async Task<Aniversario> GetAniversarioByIdAsync(int userId, int aniversarioId, bool includeParentesco = false)
