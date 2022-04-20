@@ -5,11 +5,12 @@
         <div class="input-group-prepend">
           <div class="input-group-text">Filtro:</div>
         </div>
-        <input type="text" class="form-control" placeholder="Filtrar por nome ou e-mail" [(ngModel)]="filtroLista">
+        <input type="text" class="form-control" placeholder="Filtrar por nome ou e-mail" (input)="filtrarAniversarios($event.target)">
       </div>
     </div>
     <div>
-      <a class="d-flex btn btn-outline-primary" routerLink="/aniversarios/detalhe"><i class="fa fa-plus-circle my-1"></i>
+      <a class="d-flex btn btn-outline-primary" routerLink="/aniversarios/detalhe"><i
+          class="fa fa-plus-circle my-1"></i>
         <b class="ml-1 d-none d-sm-block">Novo</b>
       </a>
     </div>
@@ -32,7 +33,7 @@
       </tr>
     </thead>
     <tbody *ngIf="aniversarios && aniversarios.length">
-      <tr *ngFor="let niver of aniversariosFiltrados" (click)="detalheAniversario(niver.id)" style="cursor: pointer;">
+      <tr *ngFor="let niver of aniversarios" (click)="detalheAniversario(niver.id)" style="cursor: pointer;">
         <td class="d-none d-md-table-cell">
           <img [collapse]="!exibirImg" [isAnimated]="true" [src]="mostraImagem(niver.imagemUrl)"
             [style.width.px]="larguraImg" [style.margin.px]="margemImg">
@@ -44,8 +45,8 @@
         <td class="d-none d-md-table-cell">{{niver.telefone}}</td>
         <td class="d-none d-md-table-cell">{{niver.parentesco?.descricao}}</td>
         <td style="text-align: center;">
-          <button type="button" class="btn btn-danger btn-lg" tooltip="Excluir" (click)="openModal($event, template, niver.id)"><i
-              class="fa fa-trash"></i></button>
+          <button type="button" class="btn btn-danger btn-lg" tooltip="Excluir"
+            (click)="openModal($event, template, niver.id)"><i class="fa fa-trash"></i></button>
         </td>
       </tr>
     </tbody>
@@ -57,6 +58,20 @@
       </tr>
     </tfoot>
   </table>
+  <div class="d-flex justify-content-center">
+    <pagination [boundaryLinks]="true"
+      previousText="&lsaquo;"
+      nextText="&rsaquo;"
+      firstText="&laquo;"
+      lastText="&raquo;"
+      [totalItems]="pagination.totalItems"
+      [align]="true"
+      [(ngModel)]="pagination.currentPage"
+      (pageChanged)="pageChanged($event)"
+      pageBtnClass="btn"
+      [itemsPerPage]="pagination.itemsPerPage">
+    </pagination>
+  </div>
 </div>
 
 <ng-template #template>

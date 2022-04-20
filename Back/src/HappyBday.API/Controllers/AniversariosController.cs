@@ -40,6 +40,8 @@ namespace HappyBday.API.Controllers
                 var aniversarios = await _aniversarioService.GetAllAniversariosAsync(User.GetUserId(), pageParams, true);
                 if (aniversarios == null) return NoContent();
 
+                Response.AddPagination(aniversarios.CurrentPage, aniversarios.PageSize, aniversarios.TotalCount, aniversarios.TotalPages);
+
                 return Ok(aniversarios);
             }
             catch (Exception ex)

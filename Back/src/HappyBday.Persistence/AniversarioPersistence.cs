@@ -26,7 +26,8 @@ namespace HappyBday.Persistence
                 query = query.Include(a => a.Parentesco);
             }            
             query = query.AsNoTracking()
-                            .Where(a => a.Nome.ToLower().Contains(pageParams.Term .ToLower()) && 
+                            .Where(a => (a.Nome.ToLower().Contains(pageParams.Term .ToLower()) || 
+                                         a.Email.ToLower().Contains(pageParams.Term .ToLower())) && 
                                      a.UserId == userId)
                             .OrderBy(a => a.DataAniversario);
 

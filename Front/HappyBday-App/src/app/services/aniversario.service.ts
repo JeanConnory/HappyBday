@@ -1,9 +1,10 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Aniversario } from '../models/Aniversario';
-import { take } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { PaginatedResult } from '@app/models/Pagination';
 
 @Injectable(
   //  { providedIn: 'root' }
@@ -13,8 +14,30 @@ export class AniversarioService {
 
   constructor(private http: HttpClient) { }
 
-  public getAniversarios(): Observable<Aniversario[]> {
-    return this.http.get<Aniversario[]>(this.baseURL).pipe(take(1));
+  public getAniversarios(page?: number, itemsPerPage?: number, term?: string): Observable<PaginatedResult<Aniversario[]>> {
+    const paginatedResult: PaginatedResult<Aniversario[]> = new PaginatedResult<Aniversario[]>();
+
+    let params = new HttpParams;
+
+    if(page != null && itemsPerPage != null) {
+      params = params.append('pageNumber', page.toString());
+      params = params.append('pageSize', itemsPerPage.toString());
+    }
+
+    if(term != null && term != '')
+      params = params.append('term', term);
+
+    return this.http.get<Aniversario[]>(this.baseURL, {observe: 'response', params})
+              .pipe(
+                take(1),
+                map((response) => {
+                  paginatedResult.result = response.body;
+                  if(response.headers.has('Pagination')) {
+                    paginatedResult.pagination = JSON.parse(response.headers.get('Pagination'))
+                  }
+                  return paginatedResult;
+                })
+              );
   }
 
   public getAniversariosByNome(nome: string): Observable<Aniversario[]> {
